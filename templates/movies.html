@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}{{ heading }} — Absolute Cinema{% endblock %}
+
+{% block content %}
+    <h2>{{ heading }}</h2>
+
+    <p><a href="{{ url_for('add_movie') }}">+ Add a new movie</a></p>
+
+    {% if movies %}
+        <ul>
+        {% for movie in movies %}
+            <li>
+                <strong>{{ movie.title }}</strong> ({{ movie.year or '—' }})
+                {% if movie.watched %}
+                    — ✓ Watched
+                {% else %}
+                    — To watch
+                {% endif %}
+                <br>
+                <a href="{{ url_for('edit_movie', movie_id=movie.id) }}">Edit</a>
+
+                <form method="POST" action="{{ url_for('delete_movie', movie_id=movie.id) }}"
+                      style="display: inline;"
+                      onsubmit="return confirm('Delete {{ movie.title }}?');">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No movies yet. <a href="{{ url_for('add_movie') }}">Add one</a>.</p>
+    {% endif %}
+{% endblock %}

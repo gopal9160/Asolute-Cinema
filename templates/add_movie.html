@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Add a Movie — Absolute Cinema{% endblock %}
+
+{% block content %}
+    <h2>Add a Movie</h2>
+
+    <form method="POST" action="{{ url_for('add_movie') }}">
+        <p>
+            <label for="title">Title:</label><br>
+            <input type="text" id="title" name="title" required>
+        </p>
+        <p>
+            <label for="year">Year:</label><br>
+            <input type="number" id="year" name="year" required>
+        </p>
+        <button type="submit">Add Movie</button>
+    </form>
+
+    <p><a href="{{ url_for('movies') }}">Back to movies</a></p>
+{% endblock %}
