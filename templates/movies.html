@@ -5,6 +5,14 @@
 {% block content %}
     <h2>{{ heading }}</h2>
 
+    <form method="GET" action="{{ url_for('movies') }}" style="margin-bottom: 20px;">
+        <input type="text" name="q" placeholder="Search movies..." value="{{ query }}">
+        <button type="submit">Search</button>
+        {% if query %}
+            <a href="{{ url_for('movies') }}">Clear</a>
+        {% endif %}
+    </form>
+
     <p><a href="{{ url_for('add_movie') }}">+ Add a new movie</a></p>
 
     {% if movies %}
@@ -29,6 +37,10 @@
         {% endfor %}
         </ul>
     {% else %}
-        <p>No movies yet. <a href="{{ url_for('add_movie') }}">Add one</a>.</p>
+        {% if query %}
+            <p>No movies match "{{ query }}". <a href="{{ url_for('movies') }}">Clear search</a>.</p>
+        {% else %}
+            <p>No movies yet. <a href="{{ url_for('add_movie') }}">Add your first one</a>.</p>
+        {% endif %}
     {% endif %}
 {% endblock %}

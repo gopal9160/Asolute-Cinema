@@ -1,5 +1,5 @@
 from functools import wraps
-
+import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -128,9 +128,15 @@ def about():
 @app.route("/movies")
 @login_required
 def movies():
-    movie_list = Movie.query.filter_by(user_id=session["user_id"]).all()
-    return render_template("movies.html", heading="My Movies", movies=movie_list)
+    query = request.args.get("q", "").strip()
+    base_query = Movie.query.filter_by(user_id=session["user_id"])
 
+    if query:
+        movie_list = base_query.filter(Movie.title.ilike(f"%{query}%")).all()
+    else:
+        movie_list = base_query.all()
+
+    return render_template("movies.html", heading="My Movies", movies=movie_list, query=query)
 
 @app.route("/movies/add", methods=["GET", "POST"])
 @login_required
