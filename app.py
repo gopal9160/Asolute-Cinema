@@ -4,7 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 app = Flask(__name__)
-
 app.secret_key = "dev-secret-key-change-me-later"
 
 
@@ -23,18 +22,38 @@ class User(db.Model):
     def __repr__(self):
         return f"<User {self.username}>"
 
+@app.context_processor
+def inject_user():
+    user_id = session.get("user_id")
+    current_user = None
+    if user_id:
+        current_user = db.session.get(User, user_id)
+    return {"current_user": current_user}
+
 
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     year = db.Column(db.Integer)
     watched = db.Column(db.Boolean, default=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     def __repr__(self):
         return f"<Movie {self.title}>"
 
+from functools import wraps
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_id") is None:
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 @app.route("/signup", methods=["GET", "POST"])
+
 def signup():
     if request.method == "POST":
         username = request.form["username"]
@@ -74,6 +93,11 @@ def login():
 
     return render_template("login.html")
 
+@app.route("/logout")
+def logout():
+    session.pop("user_id", None)
+    return redirect(url_for("movies"))
+
 
 @app.route("/")
 def home():
@@ -81,18 +105,20 @@ def home():
 
 
 @app.route("/movies")
+@login_required
 def movies():
-    movie_list = Movie.query.all()
+    movie_list = Movie.query.filter_by(user_id=session["user_id"]).all()
     return render_template("movies.html", heading="My Movies", movies=movie_list)
 
 
 @app.route("/movies/add", methods=["GET", "POST"])
+@login_required
 def add_movie():
     if request.method == "POST":
         title = request.form["title"]
         year = request.form["year"]
 
-        new_movie = Movie(title=title, year=int(year) if year else None)
+        new_movie = Movie(title=title, year=int(year) if year else None, user_id=session["user_id"])
         db.session.add(new_movie)
         db.session.commit()
 
@@ -102,8 +128,9 @@ def add_movie():
 
 
 @app.route("/movies/<int:movie_id>/edit", methods=["GET", "POST"])
+@login_required
 def edit_movie(movie_id):
-    movie = Movie.query.get_or_404(movie_id)
+    movie = Movie.query.filter_by(id=movie_id, user_id=session["user_id"]).first_or_404()
 
     if request.method == "POST":
         movie.title = request.form["title"]
@@ -118,8 +145,9 @@ def edit_movie(movie_id):
 
 
 @app.route("/movies/<int:movie_id>/delete", methods=["POST"])
+@login_required
 def delete_movie(movie_id):
-    movie = Movie.query.get_or_404(movie_id)
+    movie = Movie.query.filter_by(id=movie_id, user_id=session["user_id"]).first_or_404()
     db.session.delete(movie)
     db.session.commit()
     return redirect(url_for("movies"))
