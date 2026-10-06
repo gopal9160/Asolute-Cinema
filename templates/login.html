@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Log In — Absolute Cinema{% endblock %}
+
+{% block content %}
+    <h2>Log In</h2>
+
+    <form method="POST" action="{{ url_for('login') }}">
+        <p>
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username" required>
+        </p>
+        <p>
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required>
+        </p>
+        <button type="submit">Log In</button>
+    </form>
+
+    <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign up</a>.</p>
+{% endblock %}
