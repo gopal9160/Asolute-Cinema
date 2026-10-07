@@ -9,10 +9,7 @@ from flask_migrate import Migrate
 app = Flask(__name__)
 app.secret_key = "dev-secret-key-change-me-later"
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-    "DATABASE_URL",
-    "sqlite:///movies.db"
-)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///movies.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)

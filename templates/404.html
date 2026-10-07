@@ -3,7 +3,10 @@
 {% block title %}Not Found — Absolute Cinema{% endblock %}
 
 {% block content %}
-    <h2>Page Not Found</h2>
-    <p>Sorry, we couldn't find what you were looking for.</p>
-    <p><a href="{{ url_for('home') }}">Go back home</a></p>
+    <section class="error-page">
+        <p class="error-code rise" aria-hidden="true">404</p>
+        <h2 class="rise" style="--d: 120ms">Page Not Found</h2>
+        <p class="rise" style="--d: 220ms">Sorry, we couldn't find what you were looking for.</p>
+        <p class="rise" style="--d: 300ms"><a href="{{ url_for('home') }}" class="btn btn-secondary">Go back home</a></p>
+    </section>
 {% endblock %}

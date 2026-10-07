@@ -3,19 +3,27 @@
 {% block title %}Sign Up — Absolute Cinema{% endblock %}
 
 {% block content %}
-    <h2>Sign Up</h2>
+    <div class="narrow">
+        <h2 class="rise">Create Account</h2>
 
-    <form method="POST" action="{{ url_for('signup') }}">
-        <p>
-            <label for="username">Username:</label><br>
-            <input type="text" id="username" name="username" required>
-        </p>
-        <p>
-            <label for="password">Password:</label><br>
-            <input type="password" id="password" name="password" required>
-        </p>
-        <button type="submit">Create Account</button>
-    </form>
+        <form method="POST" action="{{ url_for('signup') }}" class="form-card rise" style="--d: 120ms">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" name="username" class="form-input" required autocomplete="username">
+            </div>
 
-    <p>Already have an account? <a href="{{ url_for('login') }}">Log in</a>.</p>
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-input" required autocomplete="new-password">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Create Account</button>
+            </div>
+        </form>
+
+        <p class="muted auth-switch rise" style="--d: 240ms">
+            Already have an account? <a href="{{ url_for('login') }}">Log in</a>
+        </p>
+    </div>
 {% endblock %}

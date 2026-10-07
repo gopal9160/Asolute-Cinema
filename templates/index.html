@@ -3,12 +3,32 @@
 {% block title %}Welcome — Absolute Cinema{% endblock %}
 
 {% block content %}
-    <h2>Welcome to Absolute Cinema</h2>
-    <p>Your personal movie watchlist.</p>
+    <section class="hero">
+        <div class="hero-bg" aria-hidden="true">
+            <div class="hero-beam"></div>
+            <div class="hero-grid"></div>
+        </div>
 
-    {% if current_user %}
-        <p><a href="{{ url_for('movies') }}">See your movies</a> or <a href="{{ url_for('add_movie') }}">add a new one</a>.</p>
-    {% else %}
-        <p><a href="{{ url_for('signup') }}">Sign up</a> or <a href="{{ url_for('login') }}">log in</a> to get started.</p>
-    {% endif %}
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="line"><span style="--d: 100ms">Absolute</span></span>
+                <span class="line"><span style="--d: 220ms">Cinema</span></span>
+            </h1>
+            <p class="hero-lead rise" style="--d: 450ms">
+                Your personal movie watchlist. Track what you've seen. Remember what you want to see.
+            </p>
+
+            {% if current_user %}
+                <div class="form-actions hero-actions rise" style="--d: 600ms">
+                    <a href="{{ url_for('movies') }}" class="btn btn-primary btn-lg">View My Movies</a>
+                    <a href="{{ url_for('add_movie') }}" class="btn btn-secondary btn-lg">Add a Movie</a>
+                </div>
+            {% else %}
+                <div class="form-actions hero-actions rise" style="--d: 600ms">
+                    <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg">Get Started</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-secondary btn-lg">Log In</a>
+                </div>
+            {% endif %}
+        </div>
+    </section>
 {% endblock %}
