@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Home — Absolute Cinema{% endblock %}
+{% block title %}Welcome — Absolute Cinema{% endblock %}
 
 {% block content %}
-    <h2>Welcome</h2>
+    <h2>Welcome to Absolute Cinema</h2>
     <p>Your personal movie watchlist.</p>
-    <a href="/movies">See my movies →</a>
+
+    {% if current_user %}
+        <p><a href="{{ url_for('movies') }}">See your movies</a> or <a href="{{ url_for('add_movie') }}">add a new one</a>.</p>
+    {% else %}
+        <p><a href="{{ url_for('signup') }}">Sign up</a> or <a href="{{ url_for('login') }}">log in</a> to get started.</p>
+    {% endif %}
 {% endblock %}
