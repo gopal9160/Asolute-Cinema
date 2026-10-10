@@ -5,15 +5,18 @@
 {% block content %}
     <div class="page-header rise">
         <h2>{{ heading }}</h2>
-        <a href="{{ url_for('add_movie') }}" class="btn btn-primary">+ Add Movie</a>
+        <div style="display: flex; gap: 8px;">
+            <a href="{{ url_for('search_movies') }}" class="btn btn-secondary">🔍 Add a Movie</a>
+            <a href="{{ url_for('add_movie') }}" class="btn btn-secondary">+ Manual</a>
+        </div>
     </div>
 
     <form method="GET" action="{{ url_for('movies') }}" class="search-form rise" style="--d: 100ms" role="search">
         <div class="search-field">
             <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <input type="text" name="q" class="form-input" placeholder="Search movies..." aria-label="Search movies" value="{{ query }}">
+            <input type="text" name="q" class="form-input" placeholder="Filter your movies..." aria-label="Filter your movies" value="{{ query }}">
         </div>
-        <button type="submit" class="btn btn-secondary">Search</button>
+        <button type="submit" class="btn btn-secondary">Filter</button>
         {% if query %}
             <a href="{{ url_for('movies') }}" class="btn btn-secondary">Clear</a>
         {% endif %}
@@ -24,7 +27,11 @@
             {% for movie in movies %}
                 <article class="movie-card" data-reveal style="--i: {{ loop.index0 % 4 }}">
                     <div class="movie-poster" aria-hidden="true">
-                        <span class="poster-letter">{{ movie.title[:1]|upper }}</span>
+                        {% if movie.poster_url %}
+                            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="poster-image">
+                        {% else %}
+                            <span class="poster-letter">{{ movie.title[:1]|upper }}</span>
+                        {% endif %}
                         {% if movie.watched %}
                             <span class="watched-badge watched-yes">Watched</span>
                         {% else %}
@@ -52,10 +59,10 @@
             <svg class="empty-icon" viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="10" width="36" height="28" rx="4"/><path d="M14 10v28M34 10v28M6 18h8M6 30h8M34 18h8M34 30h8"/></svg>
             {% if query %}
                 <p>No movies match "{{ query }}"</p>
-                <a href="{{ url_for('movies') }}" class="btn btn-secondary">Clear search</a>
+                <a href="{{ url_for('movies') }}" class="btn btn-secondary">Clear filter</a>
             {% else %}
                 <p>Your watchlist is empty.</p>
-                <a href="{{ url_for('add_movie') }}" class="btn btn-primary">Add your first movie</a>
+                <a href="{{ url_for('search_movies') }}" class="btn btn-secondary">🔍 Find your first movie</a>
             {% endif %}
         </div>
     {% endif %}
